@@ -1,6 +1,7 @@
 #pragma once
 
 #include "output_interface.h"
+#include "../data_type.h"
 
 class Servo;
 
