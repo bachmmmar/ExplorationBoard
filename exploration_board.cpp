@@ -15,6 +15,7 @@
 #include "src/outputs/hdd_spinner.h"
 #include "src/outputs/status_led.h"
 #include "src/outputs/motor.h"
+#include "src/outputs/buzzer.h"
 
 Configuration config;
 Timer timer;
@@ -26,6 +27,7 @@ HddSpinner * hdd;
 StatusLed * connected_wire_red_led;
 StatusLed * connected_wire_black_led;
 Motor * motor;
+Buzzer * buzzer;
 
 /* **** Inputs ***** */
 CodedRotarySwitch * rotary_switch;
@@ -38,6 +40,8 @@ ConnectWire * connect_wire_red;
 
 /* **** Variables ***** */
 bool was_spinning = false;
+bool red_fully_connected = false;
+bool black_fully_connected = false;
 
 
 /* **** Logging ***** */
@@ -55,6 +59,7 @@ void log(const char str[]) {
  * (except hdd which does not spin at startup) */
 void intro() {
     log("Play intro...");
+    buzzer->play_intro();
     connected_wire_red_led->play_intro();
     connected_wire_black_led->play_intro();
     servo->play_intro();
@@ -87,6 +92,7 @@ void setup() {
     connected_wire_red_led = new StatusLed(config.connect_wire_red_led, &timer);
     connected_wire_black_led = new StatusLed(config.connect_wire_black_led, &timer);
     motor = new Motor(config.motor);
+    buzzer = new Buzzer(config.buzzer, &timer);
 
     intro();
 }
@@ -111,8 +117,13 @@ void easy_game() {
         connected_wire_red_led->blink_slow();
     } else if (red_wire_value == None) {
         connected_wire_red_led->blink_fast();
+        red_fully_connected = false;
     } else {
         connected_wire_red_led->on();
+        if (!red_fully_connected) {
+            buzzer->play_melody2();
+        }
+        red_fully_connected = true;
     }
 
 
@@ -122,8 +133,13 @@ void easy_game() {
         connected_wire_black_led->blink_slow();
     } else if (black_wire_value == None) {
         connected_wire_black_led->blink_fast();
+        black_fully_connected = false;
     } else {
         connected_wire_black_led->on();
+        if (!black_fully_connected) {
+            buzzer->play_melody3();
+        }
+        black_fully_connected = true;
     }
 
 
@@ -151,6 +167,9 @@ void easy_game() {
         hdd->start_spinning();
         was_spinning = true;
     } else if (!sw && ! usb) {
+        if (was_spinning) {
+            buzzer->play_melody1();
+        }
         was_spinning = false;
     }
 

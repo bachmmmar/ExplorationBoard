@@ -85,6 +85,13 @@ struct SevenSegmentConfig {
             pins({pin0, pin1, pin2, pin3, pin4, pin5, pin6, pin7}) {}
 };
 
+
+struct BuzzerConfig {
+    uint8_t pin;
+
+    explicit BuzzerConfig(uint8_t buzzer_pin) : pin(buzzer_pin) {}
+};
+
 struct Configuration {
     PushButtonConfig push_button;
     CodedRotarySwitchConfig coded_rotary_switch;
@@ -100,6 +107,7 @@ struct Configuration {
     MotorConfig motor;
     LedConfig connect_wire_red_led;
     LedConfig connect_wire_black_led;
+    BuzzerConfig buzzer;
 
     Configuration() :
         push_button(48),
@@ -115,7 +123,8 @@ struct Configuration {
         seven_segment(32, 30, 26, 24, 22, 34, 36, 28), // due
         motor(6),
         connect_wire_red_led(51),
-        connect_wire_black_led(50){}
+        connect_wire_black_led(50),
+        buzzer(7) {}
 };
 
 
