@@ -10,6 +10,7 @@ public:
     explicit CodedRotarySwitch(const CodedRotarySwitchConfig & config);
 
     uint8_t get_value();
+    uint8_t get_debounced_value();
 
 private:
     void setup();

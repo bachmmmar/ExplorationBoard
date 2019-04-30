@@ -39,6 +39,7 @@ ConnectWire * connect_wire_black;
 ConnectWire * connect_wire_red;
 
 /* **** Variables ***** */
+uint8_t last_rotary_switch_value = -1;
 bool was_spinning = false;
 bool red_fully_connected = false;
 bool black_fully_connected = false;
@@ -107,8 +108,12 @@ void setup() {
  */
 void easy_game() {
     /* ************* Rotary Switch & Display ************** */
-    uint8_t rotary_switch_value = rotary_switch->get_value();
+    uint8_t rotary_switch_value = rotary_switch->get_debounced_value();
     display->set_value(rotary_switch_value);
+    if ((last_rotary_switch_value!= rotary_switch_value) && (last_rotary_switch_value != -1)) {
+        buzzer->beep(rotary_switch_value);
+    }
+    last_rotary_switch_value = rotary_switch_value;
 
 
     /* ************* Red wire ************** */

@@ -72,9 +72,11 @@ struct UsbConnectionConfig {
 
 struct CodedRotarySwitchConfig {
     uint8_t bit0_3_pins[4];
+    unsigned long debounce_ms;
 
     explicit CodedRotarySwitchConfig(uint8_t pin0, uint8_t pin1, uint8_t pin2, uint8_t pin3) :
-        bit0_3_pins({pin0, pin1, pin2, pin3}) {}
+        bit0_3_pins({pin0, pin1, pin2, pin3}),
+        debounce_ms(30) {}
 };
 
 struct SevenSegmentConfig {

@@ -14,6 +14,17 @@ void CodedRotarySwitch::setup() {
 }
 
 
+uint8_t CodedRotarySwitch::get_debounced_value() {
+    uint8_t val;
+
+    do {
+        val = get_value();
+        delay(config_.debounce_ms);
+    } while(val != get_value());
+
+    return val;
+}
+
 uint8_t CodedRotarySwitch::get_value() {
     uint8_t v = 0;
     for (uint8_t i=0; i<4; i++) {
